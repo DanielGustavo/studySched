@@ -7,7 +7,6 @@
 
 body {
   background-color: $white;
-  padding: 8px;
   box-sizing: border-box;
 
   font-family: 'Fira Code', Arial, Helvetica, sans-serif;
@@ -16,6 +15,13 @@ body {
 
 body, input, button {
   color: $black;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
 }
 
 button {

@@ -1,53 +1,25 @@
 <template>
-  <TopicsSection
-    class="topicsSection"
-    title="to-do"
-    :date="Date.now()"
-    :topics="topics"
-    addeable
-  />
+  <div class="view">
+    <Home />
+  </div>
 
-  <TopicsSection class="topicsSection" title="in progress" :date="Date.now()" />
-
-  <TopicsSection class="topicsSection" title="done" :date="Date.now()" />
+  <MenuBar class="menuBar" />
 </template>
 
 <script>
-import TopicsSection from './components/TopicsSection.vue';
+import Home from './views/Home.vue';
 
-const topics = [
-  {
-    title: 'Analise combinatoria',
-    subject: 'Matematica',
-    importance: 'low',
-  },
-  {
-    title: 'Genetica GeneticaGeneticaGeneticaGenetica',
-    subject: 'Biologia',
-    importance: 'medium',
-  },
-  {
-    title: 'Genetica',
-    subject: 'Biologia',
-    importance: 'high',
-  },
-];
+import MenuBar from './components/MenuBar.vue';
 
 export default {
   name: 'App',
-  components: {
-    TopicsSection,
-  },
-  data() {
-    return {
-      topics,
-    };
-  },
+  components: { Home, MenuBar },
 };
 </script>
 
 <style lang="scss" scoped>
-.topicsSection + .topicsSection {
-  margin-top: 24px;
+div.view {
+  padding: 8px;
+  overflow-y: auto;
 }
 </style>
