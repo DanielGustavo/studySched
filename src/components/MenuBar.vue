@@ -1,29 +1,26 @@
 <template>
   <div class="container">
-    <button
-      :class="{ active: activeButton === 'Calendar' }"
-      @click="setActiveButton('Calendar')"
-    >
+    <button @click="onClickButton('calendar')">
       <vue-feather type="calendar" />
     </button>
 
     <button
-      :class="{ active: activeButton === 'Home' }"
-      @click="setActiveButton('Home')"
+      :class="{ active: routerPath === '/' }"
+      @click="onClickButton('home')"
     >
       <vue-feather type="home" />
     </button>
 
     <button
-      :class="{ active: activeButton === 'AddTopic' }"
-      @click="setActiveButton('AddTopic')"
+      :class="{ active: routerPath === '/topic' }"
+      @click="onClickButton('addTopic')"
     >
       <vue-feather type="plus" />
     </button>
 
     <button
-      :class="{ active: activeButton === 'TopicsBoxes' }"
-      @click="setActiveButton('TopicsBoxes')"
+      :class="{ active: routerPath === '/topicsBoxes' }"
+      @click="onClickButton('topicsBoxes')"
     >
       <vue-feather type="archive" />
     </button>
@@ -35,13 +32,30 @@ export default {
   name: 'MenuBar',
   data() {
     return {
-      activeButton: 'Home',
+      activeButton: 'home',
+      routerPath: window.location.pathname ?? '/',
     };
   },
   methods: {
-    setActiveButton(buttonName) {
-      this.activeButton = buttonName;
+    onClickButton(buttonName) {
+      const buttonNameToAction = {
+        calendar: () => {},
+        home: () => this.$router.push('/'),
+        addTopic: () => this.$router.push('/topic'),
+        topicsBoxes: () => this.$router.push('/topicsBoxes'),
+      };
+
+      const action = buttonNameToAction[buttonName];
+
+      if (!action) return;
+
+      action();
     },
+  },
+  created() {
+    this.$router.afterEach((e) => {
+      this.routerPath = e.path;
+    });
   },
 };
 </script>
