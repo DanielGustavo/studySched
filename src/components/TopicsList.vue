@@ -1,5 +1,5 @@
 <template>
-  <ul class="container" v-if="topics.length > 0">
+  <ul class="container" v-if="topics.length > 0 || addeable">
     <li v-if="addeable">
       <AddTopicButton class="topic" />
     </li>
