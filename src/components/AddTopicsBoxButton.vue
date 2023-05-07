@@ -1,15 +1,15 @@
 <template>
-  <AddCardButton title="add topic" @click="goToTopicPage" />
+  <AddCardButton title="add topics box" @click="goToTopicsBoxPage" />
 </template>
 
 <script>
 import AddCardButton from './AddCardButton.vue';
 
 export default {
-  name: 'AddTopicButton',
+  name: 'AddTopicsBoxButton',
   methods: {
-    goToTopicPage() {
-      this.$router.push('/topic');
+    goToTopicsBoxPage() {
+      this.$router.push('/topicsBox');
     },
   },
   components: { AddCardButton },

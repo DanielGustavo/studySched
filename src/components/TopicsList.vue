@@ -1,13 +1,12 @@
 <template>
   <ul class="container" v-if="topics.length > 0">
-    <AddTopicButton v-if="addeable" class="topic" />
+    <li v-if="addeable">
+      <AddTopicButton class="topic" />
+    </li>
 
-    <Topic
-      v-for="(topic, index) of topics"
-      :key="index"
-      :topic="topic"
-      class="topic"
-    />
+    <li v-for="(topic, index) of topics" :key="index">
+      <Topic :topic="topic" class="topic" />
+    </li>
   </ul>
 
   <p class="emptyMessage" v-else-if="!addeable">You can do it! Let's study.</p>
@@ -39,8 +38,13 @@ export default {
 ul.container {
   display: flex;
   overflow-x: auto;
+  list-style: none;
 
-  .topic + .topic {
+  .topic {
+    height: 100%;
+  }
+
+  li + li {
     margin-left: 8px;
   }
 
