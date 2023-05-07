@@ -1,7 +1,10 @@
 <template>
-  <form @submit.prevent>
+  <Form @submit="onSubmit">
     <div class="inputs">
-      <input class="inputTitle h1" placeholder="Topic" name="topic" />
+      <div class="inputTitle">
+        <Field class="h1" placeholder="Topic" name="title" rules="required" />
+        <Error name="title" />
+      </div>
 
       <Input
         class="input"
@@ -11,16 +14,11 @@
       />
       <Input
         class="input"
-        label="type"
-        name="type"
-        placeholder="Study, work, exercise..."
-      />
-      <Input
-        class="input"
         label="date"
         name="date"
         type="datetime-local"
         placeholder="dd/mm/yyyy hh:mm"
+        rules="required"
       />
 
       <Input
@@ -28,7 +26,9 @@
         label="Importance"
         name="importance"
         type="number"
+        v-model="importance"
         hidden
+        rules="required|max_value:2|min_value:0"
       >
         <div>
           <button
@@ -59,12 +59,17 @@
     </div>
 
     <Button>add topic</Button>
-  </form>
+  </Form>
 </template>
 
 <script>
+import { Field, Form } from 'vee-validate';
+
 import Input from '../components/Input.vue';
 import Button from '../components/Button.vue';
+import Error from '../components/Error.vue';
+
+import addTopic from '../usecases/addTopic';
 
 export default {
   name: 'Topic',
@@ -74,6 +79,12 @@ export default {
     };
   },
   methods: {
+    onSubmit(topic, actions) {
+      addTopic(topic);
+
+      actions.resetForm();
+      actions.setFieldValue('importance', 0);
+    },
     selectTopicInput() {
       this.$refs.topicInput.focus();
     },
@@ -81,24 +92,24 @@ export default {
       this.importance = importance;
     },
   },
-  components: { Input, Button },
+  components: { Input, Button, Form, Field, Error },
 };
 </script>
 
 <style lang="scss" scoped>
-.h1 {
+.inputTitle {
   margin-bottom: 24px;
-}
 
-input.inputTitle {
-  border: none;
-  background: rgba(0, 0, 0, 0);
-  color: $black;
-  width: 100%;
-  font-weight: 500;
+  input {
+    border: none;
+    background: rgba(0, 0, 0, 0);
+    color: $black;
+    width: 100%;
+    font-weight: 500;
 
-  &::placeholder {
-    color: $black50;
+    &::placeholder {
+      color: $black50;
+    }
   }
 }
 
