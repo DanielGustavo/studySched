@@ -2,20 +2,20 @@
   <TopicsSection
     class="topicsSection"
     title="to-do"
-    :date="Date.now()"
+    :date="date"
     :topics="topics"
     addeable
   />
 
-  <TopicsSection class="topicsSection" title="in progress" :date="Date.now()" />
+  <TopicsSection class="topicsSection" title="in progress" :date="date" />
 
-  <TopicsSection class="topicsSection" title="done" :date="Date.now()" />
+  <TopicsSection class="topicsSection" title="done" :date="date" />
 </template>
 
 <script>
-import TopicsSection from '../components/TopicsSection.vue';
+import getTopics from '../usecases/getTopics';
 
-const topics = [];
+import TopicsSection from '../components/TopicsSection.vue';
 
 export default {
   name: 'Home',
@@ -24,8 +24,12 @@ export default {
   },
   data() {
     return {
-      topics,
+      date: new Date().getTime(),
+      topics: [],
     };
+  },
+  mounted() {
+    this.topics = getTopics({ day: this.date });
   },
 };
 </script>
