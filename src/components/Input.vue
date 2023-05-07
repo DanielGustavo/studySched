@@ -1,17 +1,24 @@
 <template>
   <label class="container">
     {{ label }}
-    <input v-bind="{ ...$attrs }" />
+    <Field v-bind="{ ...$attrs }" />
+    <Error v-if="$attrs.name" :name="$attrs.name" />
+
     <slot />
   </label>
 </template>
 
 <script>
+import { Field } from 'vee-validate';
+
+import Error from './Error.vue';
+
 export default {
   name: 'Input',
   props: {
     label: String,
   },
+  components: { Field, Error },
 };
 </script>
 

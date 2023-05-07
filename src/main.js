@@ -1,4 +1,5 @@
 import './styles/global.scss';
+import './setupVeeValidate';
 
 import { createApp } from 'vue';
 import VueFeather from 'vue-feather';

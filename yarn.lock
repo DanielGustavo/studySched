@@ -1369,6 +1369,13 @@
   dependencies:
     "@types/node" "*"
 
+"@vee-validate/rules@^4.9.0":
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/@vee-validate/rules/-/rules-4.9.0.tgz#46719587231c91bdd103008933fc6c4cf06a8659"
+  integrity sha512-pMyLJI6WtFpDwc478epRhvaVqKlMWrG/eUtg2eo7qVmiHva82GFloR34TuCh7i3mxQpaqieCAk1rHlCFdJwS5Q==
+  dependencies:
+    vee-validate "^4.9.0"
+
 "@vue/babel-helper-vue-jsx-merge-props@^1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@vue/babel-helper-vue-jsx-merge-props/-/babel-helper-vue-jsx-merge-props-1.4.0.tgz#8d53a1e21347db8edbe54d339902583176de09f2"
@@ -1668,7 +1675,7 @@
   optionalDependencies:
     prettier "^1.18.2 || ^2.0.0"
 
-"@vue/devtools-api@^6.4.5":
+"@vue/devtools-api@^6.4.5", "@vue/devtools-api@^6.5.0":
   version "6.5.0"
   resolved "https://registry.yarnpkg.com/@vue/devtools-api/-/devtools-api-6.5.0.tgz#98b99425edee70b4c992692628fa1ea2c1e57d07"
   integrity sha512-o9KfBeaBmCKl10usN4crU53fYtC1r7jJwdGKjPT24t348rHxgfpZ0xL3Xm/gLUYnc0oTp8LAmrxOeLyu6tbk2Q==
@@ -7081,6 +7088,13 @@ vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
+
+vee-validate@^4.9.0:
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/vee-validate/-/vee-validate-4.9.0.tgz#0d95048083d21b0fa4082a596fabc73a455f16c7"
+  integrity sha512-ewQg+r/TsB0gqmcBwigAKcMX9BQEiTxwefb7srm2FLmZakM0JyssTtMz/LCarffc6ny4/PHZ0WBREQvq6gO28A==
+  dependencies:
+    "@vue/devtools-api" "^6.5.0"
 
 vue-eslint-parser@^8.0.1:
   version "8.3.0"
