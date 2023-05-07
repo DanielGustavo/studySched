@@ -11,13 +11,7 @@ export default {
   name: 'TopicsBoxes',
   data() {
     return {
-      topicsBoxes: [
-        { title: 'Mendel' },
-        { title: 'Mendel' },
-        { title: 'Mendel' },
-        { title: 'Mendel' },
-        { title: 'Mendel' },
-      ],
+      topicsBoxes: [],
     };
   },
   components: { TopicsBoxesList },

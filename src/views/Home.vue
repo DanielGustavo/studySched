@@ -15,23 +15,7 @@
 <script>
 import TopicsSection from '../components/TopicsSection.vue';
 
-const topics = [
-  {
-    title: 'Analise combinatoria',
-    subject: 'Matematica',
-    importance: 'low',
-  },
-  {
-    title: 'Genetica GeneticaGeneticaGeneticaGenetica',
-    subject: 'Biologia',
-    importance: 'medium',
-  },
-  {
-    title: 'Genetica',
-    subject: 'Biologia',
-    importance: 'high',
-  },
-];
+const topics = [];
 
 export default {
   name: 'Home',
