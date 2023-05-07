@@ -1,19 +1,17 @@
 <template>
   <div class="view">
-    <Home />
+    <router-view />
   </div>
 
   <MenuBar class="menuBar" />
 </template>
 
 <script>
-import Home from './views/Home.vue';
-
 import MenuBar from './components/MenuBar.vue';
 
 export default {
   name: 'App',
-  components: { Home, MenuBar },
+  components: { MenuBar },
 };
 </script>
 
