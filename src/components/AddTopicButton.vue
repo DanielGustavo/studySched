@@ -1,6 +1,6 @@
 <template>
-  <li class="container">
-    <button>
+  <li class="container" @click="goToTopicPage">
+    <button @click="goToTopicPage">
       <vue-feather type="plus" />
     </button>
 
@@ -11,6 +11,11 @@
 <script>
 export default {
   name: 'AddTopicButton',
+  methods: {
+    goToTopicPage() {
+      this.$router.push('/topic');
+    },
+  },
 };
 </script>
 

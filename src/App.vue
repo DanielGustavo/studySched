@@ -18,6 +18,7 @@ export default {
 <style lang="scss" scoped>
 div.view {
   padding: 8px;
+  height: 100%;
   overflow-y: auto;
 }
 </style>
