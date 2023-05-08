@@ -65,6 +65,8 @@ div.container {
       overflow: hidden;
       max-height: 2.6rem;
       line-height: 1.3rem;
+
+      font-size: 1rem;
     }
   }
 

@@ -1,17 +1,19 @@
 <template>
-  <Card class="container" :title="topic?.title" icon="book">
-    <Badge
-      :title="topic?.subject"
-      :class="{
-        subjectBadge: true,
-        small: true,
-        low: topic.importance === 0,
-        medium: topic.importance === 1,
-        high: topic.importance === 2,
-      }"
-      >{{ topic?.subject ?? '???' }}</Badge
-    >
-  </Card>
+  <button class="container" @click.prevent="goToTopicPage">
+    <Card :title="topic?.title" icon="book">
+      <Badge
+        :title="topic?.subject"
+        :class="{
+          subjectBadge: true,
+          small: true,
+          low: topic.importance === 0,
+          medium: topic.importance === 1,
+          high: topic.importance === 2,
+        }"
+        >{{ topic?.subject || '???' }}</Badge
+      >
+    </Card>
+  </button>
 </template>
 
 <script>
@@ -23,11 +25,20 @@ export default {
   props: {
     topic: Object,
   },
+  methods: {
+    goToTopicPage() {
+      this.$router.push(`/topic/${this.topic.id}`);
+    },
+  },
   components: { Badge, Card },
 };
 </script>
 
 <style lang="scss" scoped>
+button {
+  border: none;
+}
+
 .subjectBadge {
   background-color: $secondary !important;
   color: $black !important;

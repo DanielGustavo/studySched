@@ -2,7 +2,13 @@
   <Form @submit="onSubmit">
     <div class="inputs">
       <div class="inputTitle">
-        <Field class="h1" placeholder="Topic" name="title" rules="required" />
+        <Field
+          class="h1"
+          placeholder="Topic"
+          name="title"
+          rules="required"
+          v-model="title"
+        />
         <Error name="title" />
       </div>
 
@@ -11,6 +17,7 @@
         label="subject"
         name="subject"
         placeholder="Biology, math..."
+        v-model="subject"
       />
       <Input
         class="input"
@@ -19,6 +26,7 @@
         type="datetime-local"
         placeholder="dd/mm/yyyy hh:mm"
         rules="required"
+        v-model="date"
       />
 
       <Input
@@ -58,38 +66,73 @@
       </Input>
     </div>
 
-    <Button>add topic</Button>
+    <Button v-if="topic === undefined">add topic</Button>
+    <Button v-else>edit topic</Button>
   </Form>
 </template>
 
 <script>
 import { Field, Form } from 'vee-validate';
 
+import { format } from 'date-fns';
 import Input from '../components/Input.vue';
 import Button from '../components/Button.vue';
 import Error from '../components/Error.vue';
 
+import findTopicById from '../usecases/findTopicById';
 import addTopic from '../usecases/addTopic';
+import editTopic from '../usecases/editTopic';
 
 export default {
   name: 'Topic',
   data() {
     return {
       importance: 0,
+      title: undefined,
+      subject: undefined,
+      date: undefined,
+      topic: undefined,
     };
   },
   methods: {
     onSubmit(topic, actions) {
-      addTopic(topic);
+      if (this.topic === undefined) {
+        addTopic(topic);
 
-      actions.resetForm();
-      actions.setFieldValue('importance', 0);
+        actions.resetForm();
+        actions.setFieldValue('importance', 0);
+        return;
+      }
+
+      editTopic({
+        ...topic,
+        id: this.topic.id,
+      });
+
+      this.$router.push('/');
     },
     selectTopicInput() {
       this.$refs.topicInput.focus();
     },
     setImportance(importance) {
       this.importance = importance;
+    },
+  },
+  mounted() {
+    const id = this.$route.params?.id;
+
+    if (id !== undefined) {
+      this.topic = findTopicById(id);
+    }
+  },
+  watch: {
+    topic(newTopic) {
+      if (newTopic === undefined) return;
+
+      this.title = newTopic.title;
+      this.subject = newTopic.subject;
+      this.importance = newTopic.importance;
+      this.date = format(newTopic.date, "yyyy-MM-dd'T'HH:mm");
     },
   },
   components: { Input, Button, Form, Field, Error },
