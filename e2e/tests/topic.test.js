@@ -37,7 +37,7 @@ It should create the topic
 test(`
 Given the user didn't set the title and date
 When use click the button to add topic
-It should create the topic
+It shouldn't create the topic
 `, async ({ homePage, page, topicPage }) => {
   await homePage.goTo();
 
