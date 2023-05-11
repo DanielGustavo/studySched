@@ -7,9 +7,12 @@ import AddCardButton from './AddCardButton.vue';
 
 export default {
   name: 'AddTopicButton',
+  props: {
+    url: String,
+  },
   methods: {
     goToTopicPage() {
-      this.$router.push('/topic');
+      this.$router.push(this?.url ?? '/topic');
     },
   },
   components: { AddCardButton },

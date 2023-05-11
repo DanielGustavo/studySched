@@ -29,4 +29,19 @@ button.container {
     background: darken($primary, 10);
   }
 }
+
+button.secondary {
+  background-color: $error;
+  color: $white;
+
+  transition: 200ms;
+
+  &:hover {
+    background: rgba($error, 0.8);
+  }
+
+  &:active {
+    background: darken($error, 10);
+  }
+}
 </style>

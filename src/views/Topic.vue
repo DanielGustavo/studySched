@@ -25,7 +25,7 @@
         name="date"
         type="datetime-local"
         placeholder="dd/mm/yyyy hh:mm"
-        rules="required"
+        :rules="{ required: !isInTopicsBox }"
         v-model="date"
       />
 
@@ -66,8 +66,19 @@
       </Input>
     </div>
 
-    <Button v-if="topic === undefined">add topic</Button>
-    <Button v-else>edit topic</Button>
+    <div class="buttons">
+      <Button v-if="topic === undefined">add topic</Button>
+      <Button v-else>edit topic</Button>
+
+      <Button
+        v-if="isInTopicsBox"
+        type="button"
+        class="secondary"
+        @click="goBackToTopicsBox"
+      >
+        cancel
+      </Button>
+    </div>
   </Form>
 </template>
 
@@ -83,6 +94,8 @@ import findTopicById from '../usecases/findTopicById';
 import addTopic from '../usecases/addTopic';
 import editTopic from '../usecases/editTopic';
 
+import createQueryString from '../utils/createQueryString';
+
 export default {
   name: 'Topic',
   data() {
@@ -92,6 +105,7 @@ export default {
       subject: undefined,
       date: undefined,
       topic: undefined,
+      isInTopicsBox: this.$route.path === '/topicsBox/topic',
     };
   },
   methods: {
@@ -117,6 +131,11 @@ export default {
     setImportance(importance) {
       this.importance = importance;
     },
+    goBackToTopicsBox() {
+      const queryString = createQueryString(this.$route.query);
+
+      this.$router.push(`/topicsBox${queryString}`);
+    },
   },
   mounted() {
     const id = this.$route.params?.id;
@@ -124,6 +143,8 @@ export default {
     if (id !== undefined) {
       this.topic = findTopicById(id);
     }
+
+    this.subject = this.$route.query?.subject;
   },
   watch: {
     topic(newTopic) {
@@ -161,6 +182,16 @@ form {
   flex-direction: column;
   height: 100%;
   justify-content: space-between;
+
+  div.buttons {
+    display: flex;
+    flex-direction: column;
+
+    button + button {
+      margin-top: 8px;
+    }
+  }
+
   div.inputs {
     .input + .input {
       margin-top: 8px;

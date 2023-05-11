@@ -1,7 +1,7 @@
 <template>
   <ul class="container" v-if="topics.length > 0 || addeable">
     <li v-if="addeable">
-      <AddTopicButton class="topic" />
+      <AddTopicButton class="topic" :url="url" />
     </li>
 
     <li v-for="(topic, index) of topics" :key="index">
@@ -25,9 +25,11 @@ export default {
         return [];
       },
     },
-    addeable: {
-      type: Boolean,
-      default: false,
+    addeable: [Boolean, String],
+  },
+  computed: {
+    url() {
+      return typeof this.addeable === 'string' ? this.addeable : undefined;
     },
   },
   components: { AddTopicButton, Topic },

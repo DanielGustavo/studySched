@@ -2,7 +2,7 @@
   <section class="container">
     <header>
       <h1 class="h3">{{ title }}</h1>
-      <Badge>{{ dateTitle }}</Badge>
+      <Badge v-if="dateTitle">{{ dateTitle }}</Badge>
     </header>
 
     <TopicsList :topics="topics" :addeable="addeable" />
@@ -25,10 +25,12 @@ export default {
     topics: Array,
     title: String,
     date: Number,
-    addeable: Boolean,
+    addeable: [Boolean, String],
   },
   computed: {
     dateTitle() {
+      if (this.date === undefined) return undefined;
+
       const formattedDate = isThisYear(this.date)
         ? format(this.date, 'dd/MMM')
         : format(this.date, 'dd/MM/yyyy');
