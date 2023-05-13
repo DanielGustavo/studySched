@@ -5,21 +5,21 @@
     </button>
 
     <button
-      :class="{ active: routerPath === '/' }"
+      :class="{ active: activeButton === 'home' }"
       @click="onClickButton('home')"
     >
       <vue-feather type="home" />
     </button>
 
     <button
-      :class="{ active: routerPath === '/topic' }"
+      :class="{ active: activeButton === 'topic' }"
       @click="onClickButton('addTopic')"
     >
       <vue-feather type="plus" />
     </button>
 
     <button
-      :class="{ active: routerPath === '/topicsBoxes' }"
+      :class="{ active: activeButton === 'topicsBoxes' }"
       @click="onClickButton('topicsBoxes')"
     >
       <vue-feather type="archive" />
@@ -56,6 +56,21 @@ export default {
     this.$router.afterEach((e) => {
       this.routerPath = e.path;
     });
+  },
+  watch: {
+    routerPath(newPath) {
+      if (newPath === '/') {
+        this.activeButton = 'home';
+      }
+
+      if (/^\/topic/.test(newPath)) {
+        this.activeButton = 'topic';
+      }
+
+      if (/^\/(topicsBoxes|topicsBox)/.test(newPath)) {
+        this.activeButton = 'topicsBoxes';
+      }
+    },
   },
 };
 </script>
