@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid';
+
 class TopicsBoxDraftRepository {
   constructor() {
     this.tableName = 'study@topicsBoxDraft';
@@ -19,7 +21,10 @@ class TopicsBoxDraftRepository {
     const draft = this.getDraft();
     draft.topics ??= [];
 
-    draft.topics.push(topic);
+    draft.topics.push({
+      ...topic,
+      id: uuid(),
+    });
 
     const stringifiedJson = JSON.stringify(draft);
     window.localStorage.setItem(this.tableName, stringifiedJson);

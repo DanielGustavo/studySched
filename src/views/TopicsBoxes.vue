@@ -7,12 +7,17 @@
 <script>
 import TopicsBoxesList from '../components/TopicsBoxesList.vue';
 
+import getTopicsBoxes from '../usecases/getTopicsBoxes';
+
 export default {
   name: 'TopicsBoxes',
   data() {
     return {
       topicsBoxes: [],
     };
+  },
+  mounted() {
+    this.topicsBoxes = getTopicsBoxes();
   },
   components: { TopicsBoxesList },
 };

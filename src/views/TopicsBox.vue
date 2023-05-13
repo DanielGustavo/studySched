@@ -23,12 +23,13 @@
       <TopicsSection
         class="topicsSection"
         title="topics"
-        :topics="draft?.topics ?? []"
+        :topics="topics"
         :addeable="addeableUrl"
       />
     </div>
 
-    <Button>add topics box</Button>
+    <Button v-if="topicsBox === undefined">add topics box</Button>
+    <Button v-else>edit topics box</Button>
   </Form>
 </template>
 
@@ -43,6 +44,10 @@ import TopicsSection from '../components/TopicsSection.vue';
 import saveTopicsBoxDraft from '../usecases/saveTopicsBoxDraft';
 import getTopicsBoxDraft from '../usecases/getTopicsBoxDraft';
 import clearTopicsBoxDraft from '../usecases/clearTopicsBoxDraft';
+import addTopicsBox from '../usecases/addTopicsBox';
+import addTopic from '../usecases/addTopic';
+import findTopicsBoxById from '../usecases/findTopicsBoxById';
+import editTopicsBox from '../usecases/editTopicsBox';
 
 export default {
   name: 'TopicsBox',
@@ -52,26 +57,68 @@ export default {
       title: undefined,
       subject: undefined,
       draft: undefined,
+      topicsBox: undefined,
+      topics: [],
     };
   },
   mounted() {
-    const draft = getTopicsBoxDraft();
+    const id = this.$route.params?.id;
 
-    this.draft = draft;
-    this.subject = draft?.subject;
-    this.title = draft?.title;
+    if (id === undefined) {
+      const draft = getTopicsBoxDraft();
+
+      if (draft !== undefined) {
+        this.draft = draft;
+        this.subject = draft?.subject;
+        this.title = draft?.title;
+        this.topics = draft?.topics ?? [];
+      }
+    }
+
+    if (id !== undefined) {
+      const topicsBox = findTopicsBoxById(id);
+
+      this.topicsBox = topicsBox;
+      this.subject = topicsBox?.subject;
+      this.title = topicsBox?.title;
+      this.topics = this.topicsBox?.topics ?? [];
+    }
   },
   methods: {
     onSubmit(topicsBox, actions) {
-      actions.resetForm();
-      clearTopicsBoxDraft();
+      const shouldCreate = this.topicsBox?.id === undefined;
+      const shouldEdit = this.topicsBox?.id !== undefined;
+
+      if (shouldCreate) {
+        const { id } = addTopicsBox(topicsBox);
+
+        this.draft?.topics.forEach((topic) => {
+          addTopic({
+            ...topic,
+            topicsBoxId: id,
+          });
+        });
+
+        actions.resetForm();
+        clearTopicsBoxDraft();
+        this.draft = {};
+      }
+
+      if (shouldEdit) {
+        editTopicsBox({ ...topicsBox, id: this.topicsBox.id });
+        this.$router.push('/topicsBoxes');
+      }
     },
   },
   watch: {
     title(newTitle) {
+      if (this.topicsBox) return;
+
       saveTopicsBoxDraft({ title: newTitle });
     },
     subject(newSubject) {
+      if (this.topicsBox) return;
+
       saveTopicsBoxDraft({ subject: newSubject });
     },
   },

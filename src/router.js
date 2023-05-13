@@ -14,7 +14,8 @@ const router = createRouter({
     { path: '/topic', component: { ...Topic } },
     { path: '/topicsBox/topic', component: { ...Topic } },
     { path: '/topicsBoxes', component: TopicsBoxes },
-    { path: '/topicsBox', component: TopicsBox },
+    { path: '/topicsBox', component: { ...TopicsBox } },
+    { path: '/topicsBox/:id', component: { ...TopicsBox } },
   ],
 });
 

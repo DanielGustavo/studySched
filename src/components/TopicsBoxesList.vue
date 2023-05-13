@@ -5,7 +5,7 @@
     </li>
 
     <li v-for="(topicsBox, index) of topicsBoxes" :key="index">
-      <TopicsBox :title="topicsBox?.title" class="topicsBox" />
+      <TopicsBox :topicsBox="topicsBox" class="topicsBox" />
     </li>
   </ul>
 </template>

@@ -1,5 +1,7 @@
 <template>
-  <Card :title="topicsBox?.title" icon="archive" class="container" />
+  <button @click.prevent="goToTopicsBox">
+    <Card :title="topicsBox?.title" icon="archive" class="card" />
+  </button>
 </template>
 
 <script>
@@ -10,12 +12,21 @@ export default {
   props: {
     topicsBox: Object,
   },
+  methods: {
+    goToTopicsBox() {
+      this.$router.push(`/topicsBox/${this.$props.topicsBox?.id}`);
+    },
+  },
   components: { Card },
 };
 </script>
 
 <style lang="scss" scoped>
-.container {
+button {
+  border: none;
+}
+
+.card {
   justify-content: center !important;
 }
 </style>

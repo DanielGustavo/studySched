@@ -1,5 +1,3 @@
-import { v4 as uuid } from 'uuid';
-
 import topicsBoxDraft from '../repositories/topicsBoxDraftRepository';
 
 export default function addTopicInTopicsBoxDraft(topic) {
@@ -20,7 +18,6 @@ export default function addTopicInTopicsBoxDraft(topic) {
     ...defaultTopic,
     ...topic,
     date: dateTimestamp,
-    id: uuid(),
   };
 
   topicsBoxDraft.addTopic(topicToSave);
