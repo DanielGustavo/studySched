@@ -84,8 +84,8 @@
 
 <script>
 import { Field, Form } from 'vee-validate';
-
 import { format } from 'date-fns';
+
 import Input from '../components/Input.vue';
 import Button from '../components/Button.vue';
 import Error from '../components/Error.vue';
@@ -93,8 +93,10 @@ import Error from '../components/Error.vue';
 import findTopicById from '../usecases/findTopicById';
 import addTopic from '../usecases/addTopic';
 import editTopic from '../usecases/editTopic';
-
-import createQueryString from '../utils/createQueryString';
+import getTopicsBoxDraft from '../usecases/getTopicsBoxDraft';
+import addTopicInTopicsBoxDraft from '../usecases/addTopicInTopicsBoxDraft';
+import findTopicFromBox from '../usecases/findTopicFromBox';
+import editTopicInTopicsBoxDraft from '../usecases/editTopicInTopicsBoxDraft';
 
 export default {
   name: 'Topic',
@@ -105,25 +107,45 @@ export default {
       subject: undefined,
       date: undefined,
       topic: undefined,
-      isInTopicsBox: this.$route.path === '/topicsBox/topic',
+      isInTopicsBox: /\/topicsBox\/topic/g.test(this.$route.path),
     };
   },
   methods: {
     onSubmit(topic, actions) {
-      if (this.topic === undefined) {
+      const shouldCreateTopic = this?.topic === undefined;
+      const shouldEditTopic = this?.topic?.id !== undefined;
+
+      if (shouldCreateTopic && !this.isInTopicsBox) {
         addTopic(topic);
 
         actions.resetForm();
         actions.setFieldValue('importance', 0);
-        return;
       }
 
-      editTopic({
-        ...topic,
-        id: this.topic.id,
-      });
+      if (shouldEditTopic && !this.isInTopicsBox) {
+        editTopic({
+          ...topic,
+          id: this.topic.id,
+        });
 
-      this.$router.push('/');
+        this.$router.push('/');
+      }
+
+      if (shouldCreateTopic && this.isInTopicsBox) {
+        addTopicInTopicsBoxDraft(topic);
+        actions.resetForm({
+          values: { subject: this?.subject, importance: 0 },
+        });
+      }
+
+      if (shouldEditTopic && this.isInTopicsBox) {
+        editTopicInTopicsBoxDraft({
+          ...topic,
+          id: this.topic.id,
+        });
+
+        this.goBackToTopicsBox();
+      }
     },
     selectTopicInput() {
       this.$refs.topicInput.focus();
@@ -132,19 +154,29 @@ export default {
       this.importance = importance;
     },
     goBackToTopicsBox() {
-      const queryString = createQueryString(this.$route.query);
-
-      this.$router.push(`/topicsBox${queryString}`);
+      this.$router.push(`/topicsBox`);
     },
   },
   mounted() {
     const id = this.$route.params?.id;
 
-    if (id !== undefined) {
+    const shouldGetTopicFromABox = id !== undefined && this.isInTopicsBox;
+
+    if (id !== undefined && !shouldGetTopicFromABox) {
       this.topic = findTopicById(id);
     }
 
+    if (shouldGetTopicFromABox) {
+      this.topic = findTopicFromBox(id);
+    }
+
     this.subject = this.$route.query?.subject;
+
+    if (this.isInTopicsBox) {
+      const topicsBoxDraft = getTopicsBoxDraft();
+
+      this.subject = topicsBoxDraft?.subject;
+    }
   },
   watch: {
     topic(newTopic) {
@@ -153,7 +185,10 @@ export default {
       this.title = newTopic.title;
       this.subject = newTopic.subject;
       this.importance = newTopic.importance;
-      this.date = format(newTopic.date, "yyyy-MM-dd'T'HH:mm");
+
+      if (newTopic?.date !== undefined) {
+        this.date = format(newTopic.date, "yyyy-MM-dd'T'HH:mm");
+      }
     },
   },
   components: { Input, Button, Form, Field, Error },

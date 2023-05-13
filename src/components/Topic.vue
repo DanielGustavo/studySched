@@ -24,10 +24,19 @@ export default {
   name: 'Topic',
   props: {
     topic: Object,
+    url: {
+      type: String,
+      default: '/topic',
+    },
   },
   methods: {
     goToTopicPage() {
-      this.$router.push(`/topic/${this.topic.id}`);
+      const endsWithBar = /\/$/g;
+      const shouldAddBarInBaseUrl = !endsWithBar.test(this.url);
+
+      const baseUrl = `${this.$props.url}${shouldAddBarInBaseUrl ? '/' : ''}`;
+
+      this.$router.push(`${baseUrl}${this.topic.id}`);
     },
   },
   components: { Badge, Card },

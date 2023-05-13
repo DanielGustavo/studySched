@@ -23,7 +23,7 @@
       <TopicsSection
         class="topicsSection"
         title="topics"
-        :topics="[]"
+        :topics="draft?.topics ?? []"
         :addeable="addeableUrl"
       />
     </div>
@@ -40,36 +40,39 @@ import Button from '../components/Button.vue';
 import Error from '../components/Error.vue';
 import TopicsSection from '../components/TopicsSection.vue';
 
-import createQueryString from '../utils/createQueryString';
+import saveTopicsBoxDraft from '../usecases/saveTopicsBoxDraft';
+import getTopicsBoxDraft from '../usecases/getTopicsBoxDraft';
+import clearTopicsBoxDraft from '../usecases/clearTopicsBoxDraft';
 
 export default {
   name: 'TopicsBox',
   data() {
     return {
-      addeableUrlBase: '/topicsBox/topic',
+      addeableUrl: '/topicsBox/topic',
       title: undefined,
       subject: undefined,
+      draft: undefined,
     };
   },
-  computed: {
-    addeableUrl() {
-      const params = {
-        subject: this.subject,
-        topicsBoxTitle: this.title,
-      };
-
-      const paramsString = createQueryString(params);
-
-      return `${this.addeableUrlBase}${paramsString}`;
-    },
-  },
   mounted() {
-    this.subject = this.$route.query?.subject;
-    this.title = this.$route.query?.topicsBoxTitle;
+    const draft = getTopicsBoxDraft();
+
+    this.draft = draft;
+    this.subject = draft?.subject;
+    this.title = draft?.title;
   },
   methods: {
-    onSubmit() {
-      //
+    onSubmit(topicsBox, actions) {
+      actions.resetForm();
+      clearTopicsBoxDraft();
+    },
+  },
+  watch: {
+    title(newTitle) {
+      saveTopicsBoxDraft({ title: newTitle });
+    },
+    subject(newSubject) {
+      saveTopicsBoxDraft({ subject: newSubject });
     },
   },
   components: { Input, Button, Form, Field, Error, TopicsSection },

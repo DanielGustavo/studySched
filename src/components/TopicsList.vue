@@ -5,7 +5,7 @@
     </li>
 
     <li v-for="(topic, index) of topics" :key="index">
-      <Topic :topic="topic" class="topic" />
+      <Topic :topic="topic" class="topic" :url="url" />
     </li>
   </ul>
 

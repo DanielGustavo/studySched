@@ -10,10 +10,11 @@ const router = createRouter({
   routes: [
     { path: '/', component: Home },
     { path: '/topic/:id', component: { ...Topic } },
+    { path: '/topicsBox/topic/:id', component: { ...Topic } },
     { path: '/topic', component: { ...Topic } },
+    { path: '/topicsBox/topic', component: { ...Topic } },
     { path: '/topicsBoxes', component: TopicsBoxes },
     { path: '/topicsBox', component: TopicsBox },
-    { path: '/topicsBox/topic', component: { ...Topic } },
   ],
 });
 
