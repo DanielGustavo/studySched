@@ -104,6 +104,7 @@ export default {
         actions.resetForm();
         clearTopicsBoxDraft();
         this.draft = {};
+        this.topics = [];
       }
 
       if (shouldEdit) {
