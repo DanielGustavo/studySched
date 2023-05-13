@@ -15,7 +15,7 @@
       :class="{ active: activeButton === 'topic' }"
       @click="onClickButton('addTopic')"
     >
-      <vue-feather type="plus" />
+      <vue-feather type="book" />
     </button>
 
     <button
