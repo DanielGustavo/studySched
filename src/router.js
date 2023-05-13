@@ -11,6 +11,8 @@ const router = createRouter({
     { path: '/', component: Home },
     { path: '/topic/:id', component: { ...Topic } },
     { path: '/topicsBox/topic/:id', component: { ...Topic } },
+    { path: '/topicsBox/:topicsBoxId/topic/:id', component: { ...Topic } },
+    { path: '/topicsBox/:topicsBoxId/topic', component: { ...Topic } },
     { path: '/topic', component: { ...Topic } },
     { path: '/topicsBox/topic', component: { ...Topic } },
     { path: '/topicsBoxes', component: TopicsBoxes },

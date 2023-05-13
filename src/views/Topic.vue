@@ -25,7 +25,7 @@
         name="date"
         type="datetime-local"
         placeholder="dd/mm/yyyy hh:mm"
-        :rules="{ required: !isInTopicsBox }"
+        :rules="{ required: !(isInTopicsBoxDraft || isInTopicsBox) }"
         v-model="date"
       />
 
@@ -71,7 +71,7 @@
       <Button v-else>edit topic</Button>
 
       <Button
-        v-if="isInTopicsBox"
+        v-if="isInTopicsBoxDraft || isInTopicsBox"
         type="button"
         class="secondary"
         @click="goBackToTopicsBox"
@@ -95,8 +95,10 @@ import addTopic from '../usecases/addTopic';
 import editTopic from '../usecases/editTopic';
 import getTopicsBoxDraft from '../usecases/getTopicsBoxDraft';
 import addTopicInTopicsBoxDraft from '../usecases/addTopicInTopicsBoxDraft';
-import findTopicFromBox from '../usecases/findTopicFromBox';
+import findTopicFromBoxDraft from '../usecases/findTopicFromBoxDraft';
 import editTopicInTopicsBoxDraft from '../usecases/editTopicInTopicsBoxDraft';
+import editTopicInTopicsBox from '../usecases/editTopicInTopicsBox';
+import findTopicsBoxById from '../usecases/findTopicsBoxById';
 
 export default {
   name: 'Topic',
@@ -107,7 +109,9 @@ export default {
       subject: undefined,
       date: undefined,
       topic: undefined,
-      isInTopicsBox: /\/topicsBox\/topic/g.test(this.$route.path),
+      isInTopicsBoxDraft: false,
+      isInTopicsBox: false,
+      topicsBox: undefined,
     };
   },
   methods: {
@@ -115,14 +119,17 @@ export default {
       const shouldCreateTopic = this?.topic === undefined;
       const shouldEditTopic = this?.topic?.id !== undefined;
 
-      if (shouldCreateTopic && !this.isInTopicsBox) {
+      if (
+        shouldCreateTopic &&
+        !(this.isInTopicsBoxDraft || this.isInTopicsBox)
+      ) {
         addTopic(topic);
 
         actions.resetForm();
         actions.setFieldValue('importance', 0);
       }
 
-      if (shouldEditTopic && !this.isInTopicsBox) {
+      if (shouldEditTopic && !(this.isInTopicsBoxDraft || this.isInTopicsBox)) {
         editTopic({
           ...topic,
           id: this.topic.id,
@@ -131,15 +138,35 @@ export default {
         this.$router.push('/');
       }
 
-      if (shouldCreateTopic && this.isInTopicsBox) {
+      if (shouldCreateTopic && this.isInTopicsBoxDraft) {
         addTopicInTopicsBoxDraft(topic);
         actions.resetForm({
           values: { subject: this?.subject, importance: 0 },
         });
       }
 
-      if (shouldEditTopic && this.isInTopicsBox) {
+      if (shouldCreateTopic && this.isInTopicsBox) {
+        addTopic({
+          ...topic,
+          topicsBoxId: this.$route.params?.topicsBoxId,
+        });
+
+        actions.resetForm({
+          values: { subject: this?.subject, importance: 0 },
+        });
+      }
+
+      if (shouldEditTopic && this.isInTopicsBoxDraft) {
         editTopicInTopicsBoxDraft({
+          ...topic,
+          id: this.topic.id,
+        });
+
+        this.goBackToTopicsBox();
+      }
+
+      if (shouldEditTopic && this.isInTopicsBox) {
+        editTopicInTopicsBox({
           ...topic,
           id: this.topic.id,
         });
@@ -154,28 +181,49 @@ export default {
       this.importance = importance;
     },
     goBackToTopicsBox() {
-      this.$router.push(`/topicsBox`);
+      const topicsBoxId = this.$route.params?.topicsBoxId;
+
+      if (topicsBoxId) {
+        this.$router.push(`/topicsBox/${topicsBoxId}`);
+      } else {
+        this.$router.push(`/topicsBox`);
+      }
     },
   },
   mounted() {
     const id = this.$route.params?.id;
+    const topicsBoxId = this.$route.params?.topicsBoxId;
 
-    const shouldGetTopicFromABox = id !== undefined && this.isInTopicsBox;
+    this.isInTopicsBoxDraft =
+      /\/topicsBox/g.test(this.$route.path) && !topicsBoxId;
 
-    if (id !== undefined && !shouldGetTopicFromABox) {
+    this.isInTopicsBox = /\/topicsBox/g.test(this.$route.path) && topicsBoxId;
+
+    const shouldGetTopicFromABoxDraft =
+      id !== undefined && this.isInTopicsBoxDraft && topicsBoxId === undefined;
+
+    if (topicsBoxId !== undefined) {
+      this.topicsBox = findTopicsBoxById(topicsBoxId);
+    }
+
+    if (id !== undefined && !shouldGetTopicFromABoxDraft) {
       this.topic = findTopicById(id);
     }
 
-    if (shouldGetTopicFromABox) {
-      this.topic = findTopicFromBox(id);
+    if (shouldGetTopicFromABoxDraft) {
+      this.topic = findTopicFromBoxDraft(id);
     }
 
-    this.subject = this.$route.query?.subject;
-
-    if (this.isInTopicsBox) {
+    if (this.isInTopicsBoxDraft) {
       const topicsBoxDraft = getTopicsBoxDraft();
 
       this.subject = topicsBoxDraft?.subject;
+    }
+
+    if (this.isInTopicsBox) {
+      const topicsBox = findTopicsBoxById(topicsBoxId);
+
+      this.subject = topicsBox?.subject;
     }
   },
   watch: {

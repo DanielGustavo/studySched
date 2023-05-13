@@ -82,6 +82,8 @@ export default {
       this.subject = topicsBox?.subject;
       this.title = topicsBox?.title;
       this.topics = this.topicsBox?.topics ?? [];
+
+      this.addeableUrl = `/topicsBox/${id}/topic`;
     }
   },
   methods: {
