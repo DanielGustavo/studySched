@@ -28,18 +28,26 @@
 </template>
 
 <script>
+import useFiltersStore from '../stores/filtersStore';
+
 export default {
   name: 'MenuBar',
   data() {
     return {
       activeButton: 'home',
       routerPath: window.location.pathname ?? '/',
+      filtersStore: undefined,
     };
   },
   methods: {
     onClickButton(buttonName) {
       const buttonNameToAction = {
-        calendar: () => {},
+        calendar: () => {
+          // eslint-disable-next-line prefer-destructuring
+          const showCalendarModal = this.filtersStore.showCalendarModal;
+
+          this.filtersStore.showCalendarModal = !showCalendarModal;
+        },
         home: () => this.$router.push('/'),
         addTopic: () => this.$router.push('/topic'),
         topicsBoxes: () => this.$router.push('/topicsBoxes'),
@@ -56,6 +64,8 @@ export default {
     this.$router.afterEach((e) => {
       this.routerPath = e.path;
     });
+
+    this.filtersStore = useFiltersStore();
   },
   watch: {
     routerPath(newPath) {
@@ -81,6 +91,7 @@ div.container {
   background-color: $black;
   display: flex;
   justify-content: center;
+  z-index: 99999;
 
   button {
     border: none;

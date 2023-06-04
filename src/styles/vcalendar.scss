@@ -1,0 +1,29 @@
+.vc-container {
+  background: $black !important;
+  border-color: $black !important;
+  color: $white !important;
+}
+
+button.vc-title, button.vc-nav-title, button.vc-nav-item {
+  background: $black90 !important;
+  color: $black10 !important;
+}
+
+button.vc-arrow, button.vc-nav-arrow {
+  background: $black90 !important;
+  color: $black50 !important;
+}
+
+.vc-weekday {
+  color: $black50 !important;
+}
+
+.vc-popover-content {
+  background: $black !important;
+  border-color: $black90 !important;
+  color: $white !important;
+}
+
+.vc-highlight-bg-solid, .vc-dot-start {
+  background: $primary !important;
+}

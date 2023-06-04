@@ -17,6 +17,8 @@ import getTopics from '../usecases/getTopics';
 
 import TopicsSection from '../components/TopicsSection.vue';
 
+import usefiltersStore from '../stores/filtersStore';
+
 export default {
   name: 'Home',
   components: {
@@ -24,12 +26,24 @@ export default {
   },
   data() {
     return {
-      date: new Date().getTime(),
+      date: undefined,
       topics: [],
+      filtersStore: undefined,
     };
   },
-  mounted() {
-    this.topics = getTopics({ day: this.date });
+  created() {
+    this.filtersStore = usefiltersStore();
+
+    this.date = this.filtersStore.date ?? new Date().getTime();
+
+    this.filtersStore.$subscribe((_, state) => {
+      this.date = state.date ?? this.date;
+    });
+  },
+  watch: {
+    date(newDate) {
+      this.topics = getTopics({ day: newDate });
+    },
   },
 };
 </script>
